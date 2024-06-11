@@ -59,12 +59,11 @@ public class PhotoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    Void sharePhoto(){
+    public void sharePhoto(){
         Uri photoUri = FileProvider.getUriForFile(PhotoActivity.this, "dettmann.pratti.rafael.galeria.fileprovider", new File(photoPath));
         Intent i = new Intent(Intent.ACTION_SEND);
         i.putExtra(Intent.EXTRA_STREAM, photoUri);
         i.setType("image/jpeg");
         startActivity(i);
-        return null;
     }
 }
