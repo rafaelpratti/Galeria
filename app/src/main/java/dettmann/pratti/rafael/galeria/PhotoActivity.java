@@ -34,7 +34,7 @@ public class PhotoActivity extends AppCompatActivity {
         Intent i = getIntent();
         photoPath = i.getStringExtra("photoPath");
 
-        Bitmap bitmap = Utils.getBitmap(photoPath);
+        Bitmap bitmap = Util.getBitmap(photoPath);
         ImageView imPhoto = findViewById(R.id.imPhoto);
         imPhoto.setImageBitmap(bitmap);
 
@@ -52,13 +52,11 @@ public class PhotoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.opShare:
-                sharePhoto();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.opShare) {
+            sharePhoto();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     Void sharePhoto(){
@@ -67,5 +65,6 @@ public class PhotoActivity extends AppCompatActivity {
         i.putExtra(Intent.EXTRA_STREAM, photoUri);
         i.setType("image/jpeg");
         startActivity(i);
+        return null;
     }
 }
