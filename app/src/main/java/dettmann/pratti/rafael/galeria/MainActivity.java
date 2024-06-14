@@ -127,8 +127,6 @@ public boolean onCreateOptionsMenu(Menu menu) {
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             i.putExtra(MediaStore.EXTRA_OUTPUT, fUri);
             startActivityForResult(i, RESULT_TAKE_PICTURE);
-
-
         }
     }
 

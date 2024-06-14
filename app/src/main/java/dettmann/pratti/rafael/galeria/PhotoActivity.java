@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,11 +26,17 @@ public class PhotoActivity extends AppCompatActivity {
 
     String photoPath;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_photo);
+
+        Toolbar toolbar = findViewById(R.id.tbPhoto);
+        setSupportActionBar(toolbar);
 
         Intent i = getIntent();
         photoPath = i.getStringExtra("photoPath");
@@ -48,7 +55,6 @@ public class PhotoActivity extends AppCompatActivity {
         inflater.inflate(R.menu.photo_activity_tb, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
