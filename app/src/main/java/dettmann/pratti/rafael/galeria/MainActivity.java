@@ -42,7 +42,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Lista dos endereços das imagens
     List<String> photos = new ArrayList<>();
+
+    // adapter para as fotos
     MainAdapter mainAdapter;
 
     static int RESULT_TAKE_PICTURE = 1;
@@ -56,29 +59,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
 
         List<String> permissions = new ArrayList<>();
         permissions.add(Manifest.permission.CAMERA);
         checkForPermissions(permissions);
 
-
+        // adição da toolbar
         Toolbar toolbar = findViewById(R.id.tbMain);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // lê a lista de fotos já salvas e adiciona na lista de fotos
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File[] files = dir.listFiles();
         for(int i = 0; i< files.length; i++){
             photos.add(files[i].getAbsolutePath());
         }
+
+        // atribuindo o adapter para o recycleview
         mainAdapter = new MainAdapter(MainActivity.this, photos);
         RecyclerView rvGallery = findViewById(R.id.rvGallery);
         rvGallery.setAdapter(mainAdapter);
 
+        // calcula quantas colunas de fotos cabem na tela
         float w = getResources().getDimension(R.dimen.itemWidth);
         int numberOfColumns =  Util.calculateNoOfColumns(MainActivity.this, w);
+
+        // configura o layout do rv para exibir as fotos em GRID, usando a quantidade de colunas calculada
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, numberOfColumns);
         rvGallery.setLayoutManager(gridLayoutManager);
 
@@ -86,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
 public boolean onCreateOptionsMenu(Menu menu) {
+        // adiciona os itens de menu a MainActivity
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_tb, menu);
@@ -93,8 +107,10 @@ public boolean onCreateOptionsMenu(Menu menu) {
         }
 
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // ao clicar em um item da toolbar, se for o item da camera, abre a camera
         if (item.getItemId() == R.id.opCamera) {
             dispatchTakePictureIntent();
             return true;
@@ -102,25 +118,31 @@ public boolean onCreateOptionsMenu(Menu menu) {
         return super.onOptionsItemSelected(item);
     }
 
+
     public void startPhotoActivity(String photoPath){
+        // recebe como parametro a imagem a ser exibida e inicia a PhotoActivity usando o endereço da imagem
         Intent i = new Intent(MainActivity.this, PhotoActivity.class);
         i.putExtra("photoPath", photoPath);
         startActivity(i);
     }
 
     private void dispatchTakePictureIntent() {
+        //cria um arquivo em branco
         File f = null;
 
         try {
+            // executa o metodo para criar o arquivo de imagem
             f = createImageFile();
 
         }
         catch (IOException e){
+            // caso o arquivo não possa ser criado
             Toast.makeText(MainActivity.this, "Não foi possível criar o arquivo", Toast.LENGTH_LONG).show();
             return;
         }
 
-        String currentPhotoPath = f.getAbsolutePath();
+        // atributo que guarda o endereço da foto adicionada
+        currentPhotoPath = f.getAbsolutePath();
 
         if (f!=null){
             Uri fUri = FileProvider.getUriForFile(MainActivity.this, "dettmann.pratti.rafael.galeria.fileprovider", f);
@@ -131,6 +153,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
     }
 
     private File createImageFile() throws IOException {
+        // cria arquivos de imagem e atribui nomes diferentes para cada um
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);

@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter {
 
+
     MainActivity mainActivity;
     List<String> photos;
 
@@ -34,6 +35,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
+        // criação dos itens da recycle view
         ImageView imPhoto = holder.itemView.findViewById(R.id.imItem);
         int w = (int) mainActivity.getResources().getDimension(R.dimen.itemWidth);
         int h = (int) mainActivity.getResources().getDimension(R.dimen.itemHeight);
@@ -44,6 +46,7 @@ public class MainAdapter extends RecyclerView.Adapter {
 
         imPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
+            // executa a activity de mostrar a imagem a partir da posição no rv
             public void onClick(View v) {
                 mainActivity.startPhotoActivity(photos.get(position));
             }
